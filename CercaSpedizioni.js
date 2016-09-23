@@ -37,33 +37,33 @@ module.exports = function(context, cb) {
         });
         response.on('end', function() {
               myCb(body2);
-   		});
- 	 });
-    var postData = ("mpcode1=" + context.data.code);
-	req.write(postData);
+      });
+   });
+    var postData = ("mpcode1=" + context.data.code + "&mpdate=" + context.data.lapse);
+    console.log(postData);
+  req.write(postData);
     req.end();
   }
   
   function parsePage(body){
   var outArray = [];
     var $ = cheerio.load(body);
-  	$('#tabella-0 tbody tr').each(function() {
-      	tds = $(this).find('td');
+    $('#tabella-0 tbody tr').each(function() {
+        tds = $(this).find('td');
         var dove = $(tds[2]).text().replace(/[\n\r\t]+/g, '');
-      	outArray.push({data: $(tds[0]).text(), stato: $(tds[1]).text(), luogo: dove});
-      	
-  	});
+        outArray.push({data: $(tds[0]).text(), stato: $(tds[1]).text(), luogo: dove});
+        
+    });
     return outArray;
    }
   
   function myCb(b){
     //console.log("BODY", b);
-  	out = parsePage(b);
+    out = parsePage(b);
     cb(null, {result: out});
   }
   
   getUP(myCb);
   
 } ;
-
 
